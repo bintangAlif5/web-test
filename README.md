@@ -10,4 +10,4 @@
 - git clone https://github.com/bintangAlif5/web-test.git
 - cd web-test
 - sh gans
-• Please use it, and don't forget to follow Github
+-• Please use it, and don't forget to follow Github

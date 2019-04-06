@@ -1,7 +1,7 @@
 #web-test
-#created by star
+-#created by star
 
-**tools and materials
+-**tools and materials
 - thermux application
 ** enter command ***
 - apt update && apt upgrade -y

@@ -1364,9 +1364,7 @@ $user
 	echo '
 <br /><br /><br /></b></b><div class="fot">Recoded by Star</b>
 <br /><br />
-<b style="color: red";>   Sec-w.Com  </b>
-<br /><br />
-Muslims Hackers</div> ';
+<br /><br />';
 	
 }
 

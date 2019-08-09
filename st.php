@@ -1479,12 +1479,9 @@ function exe($cmd) {
 		return $buff; 	
 	} 
 }
+?>
 
-
-echo '</div>
+</div>
 </body>
 
 </html>
-';
-
-?>
